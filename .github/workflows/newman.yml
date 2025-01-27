@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Postman tests
         run: |
-          newman run https://api.getpostman.com/collections/${{ secrets.POSTMAN_COLLECTION_ID }}?apikey=${{ secrets.POSTMAN_API_KEY }} \
+          newman run https://api.getpostman.com/collections/${{ env.POSTMAN_COLLECTION_ID }}?apikey=${{ secrets.POSTMAN_API_KEY }} \
           --reporters cli,html,junit \
           --reporter-html-export index.html \
           --reporter-junit-export report.xml
