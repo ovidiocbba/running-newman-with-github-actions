@@ -44,22 +44,39 @@ jobs:
           name: newman-report
           path: index.html  # Upload index.html as an artifact
 
-  deploy-to-pages:
+  deploy:
     runs-on: ubuntu-latest
-    needs: run-tests
+    needs: run-tests  # Make sure this step runs after the tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup GitHub Pages deploy
+      - name: Check if index.html exists
         run: |
-          mkdir -p public
+          if [ -f "index.html" ]; then
+            echo "index.html found!"
+          else
+            echo "index.html not found!"
+            exit 1
+          fi
+
+      - name: Create public directory and move HTML report
+        run: |
+          mkdir -p public  # Create the 'public' folder if it doesn't exist
           mv index.html public/  # Move the HTML report to the 'public' directory
+
+      - name: List files in the public folder
+        run: |
           echo "Files in the public folder:"
-          ls -l public
+          ls -l public  # List the contents of the 'public' folder
+
+      - name: Display contents of the index.html file
+        run: |
+          echo "Contents of the public folder:"
+          cat public/index.html  # Display the content of the copied file
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Token for authorization
-          publish_dir: ./public  # Directory where index.html is located
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public  # The directory where the index.html is located
