@@ -42,14 +42,19 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: newman-report
-          path: index.html  # Upload index.html as an artifact
+          path: index.html
 
   deploy:
     runs-on: ubuntu-latest
-    needs: run-tests  # Make sure this step runs after the tests
+    needs: run-tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download Report Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: newman-report
 
       - name: Check if index.html exists
         run: |
