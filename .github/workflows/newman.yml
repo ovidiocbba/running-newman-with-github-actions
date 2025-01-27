@@ -24,13 +24,13 @@ jobs:
       - name: Install Newman and dependencies
         run: |
           npm install -g newman
-          npm install -g newman-reporter-html
+          npm install -g newman-reporter-htmlextra
 
       - name: Run Postman tests
         run: |
           newman run https://api.getpostman.com/collections/${{ vars.POSTMAN_COLLECTION_ID }}?apikey=${{ secrets.POSTMAN_API_KEY }} \
           --reporters cli,html,junit \
-          --reporter-html-export index.html \
+          --reporter-htmlextra-export index.html \
           --reporter-junit-export report.xml
 
       - name: List generated files
@@ -86,11 +86,6 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
-        # If you're changing the branch from main,
-        # also change the `main` in `refs/heads/main`
-        # below accordingly.
-        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-
